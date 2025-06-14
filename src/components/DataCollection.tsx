@@ -194,3 +194,4 @@ class SmartphoneDataCollector:
 };
 
 export default DataCollection;
+//note:
