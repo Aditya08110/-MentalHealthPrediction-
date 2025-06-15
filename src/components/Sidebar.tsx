@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  Database, 
-  BarChart3, 
-  Brain, 
+import {
+  Database,
+  BarChart3,
+  Brain,
   Shield,
   Activity,
   TrendingUp,
@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
         </h1>
         <p className="text-sm text-gray-400 mt-1">Mental Health Prediction</p>
       </div>
-      
+
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
           {menuItems.map((item) => {
@@ -48,11 +48,10 @@ const Sidebar: React.FC = () => {
               <li key={item.id}>
                 <button
                   onClick={() => navigate(`/dashboard/${item.id}`)}
-                  className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${
-                    currentPath === item.id
+                  className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${currentPath === item.id
                       ? 'bg-blue-600 text-white shadow-lg'
                       : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                  }`}
+                    }`}
                 >
                   <Icon className="w-5 h-5 mr-3" />
                   <span className="text-sm font-medium">{item.label}</span>
@@ -62,7 +61,7 @@ const Sidebar: React.FC = () => {
           })}
         </ul>
       </nav>
-      
+
       <div className="p-4 border-t border-gray-700">
         <div className="bg-gray-800 rounded-lg p-3">
           <div className="flex items-center justify-between mb-2">
@@ -71,7 +70,7 @@ const Sidebar: React.FC = () => {
           </div>
           <p className="text-xs text-gray-300">Model Active • Realtime Monitoring</p>
         </div>
-        
+
         <button
           onClick={handleLogout}
           className="w-full mt-4 flex items-center px-4 py-3 rounded-lg text-red-400 hover:bg-red-400/10 transition-all duration-200"

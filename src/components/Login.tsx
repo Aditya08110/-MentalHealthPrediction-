@@ -24,7 +24,7 @@ const Login: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">MindWatch AI</h1>
           <p className="text-gray-600 mt-2">Mental Health Prediction System</p>
         </div>
-        
+
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">

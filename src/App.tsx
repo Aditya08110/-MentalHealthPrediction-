@@ -28,7 +28,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Navigate to="/dashboard/data" replace />} />
-        
+
         <Route
           path="/dashboard"
           element={
@@ -39,7 +39,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/dashboard/data"
           element={
@@ -50,7 +50,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/dashboard/eda"
           element={
@@ -61,7 +61,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/dashboard/features"
           element={
@@ -72,7 +72,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/dashboard/model"
           element={
@@ -83,7 +83,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/dashboard/evaluation"
           element={
@@ -94,7 +94,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/dashboard/prediction"
           element={
@@ -105,7 +105,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
+
         <Route
           path="/dashboard/explainable"
           element={
