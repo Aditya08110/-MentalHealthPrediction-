@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, Brain, Target, Info, TrendingUp, BarChart3 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, LineChart, Line } from 'recharts';
-import { generateMockSensorData, generateProcessedFeatures, generateModelPrediction } from '../utils/mockData';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+
+interface ExplanationData {
+  feature: string;
+  shap_value: number;
+  feature_value: number;
+}
 
 const ExplainableAI: React.FC = () => {
-  const [selectedFeature, setSelectedFeature] = useState<string>('social_interaction');
-  const [shapValues, setShapValues] = useState<Array<{ feature: string; shap_value: number; feature_value: number }>>([]);
+  const [shapValues, setShapValues] = useState<ExplanationData[]>([]);
   const [explanationType, setExplanationType] = useState<'local' | 'global'>('local');
 
   useEffect(() => {
@@ -48,7 +52,7 @@ const ExplainableAI: React.FC = () => {
     contribution: item.shap_value,
   }));
 
-  const getContributionColor = (value: number) => {
+  const getContributionColor = (value: number): string => {
     return value > 0 ? '#ef4444' : '#10b981'; // Red for increasing risk, green for decreasing
   };
 
@@ -91,23 +95,37 @@ const ExplainableAI: React.FC = () => {
                 <Eye className="w-5 h-5 mr-2 text-blue-500" />
                 SHAP Values (Individual Prediction)
               </h3>
-              <div className="h-64">
+              <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={shapValues} layout="horizontal">
+                  <BarChart data={shapValues} layout="horizontal" margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis type="number" stroke="#6b7280" />
-                    <YAxis dataKey="feature" type="category" width={100} stroke="#6b7280" />
+                    <XAxis 
+                      type="number" 
+                      stroke="#374151" 
+                      tickSize={8}
+                      label={{ value: "SHAP Value", position: "bottom", offset: 0 }}
+                      style={{ fontSize: '12px' }}
+                    />
+                    <YAxis 
+                      dataKey="feature" 
+                      type="category" 
+                      width={120} 
+                      stroke="#374151"
+                      tickFormatter={(value: string) => value.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                      style={{ fontSize: '12px' }}
+                    />
                     <Tooltip 
                       contentStyle={{
                         backgroundColor: '#f9fafb',
                         border: '1px solid #e5e7eb',
-                        borderRadius: '8px'
+                        borderRadius: '8px',
+                        fontSize: '12px'
                       }}
                       formatter={(value: any) => [value.toFixed(3), 'SHAP Value']}
                     />
                     <Bar 
                       dataKey="shap_value" 
-                      fill={(entry: any) => getContributionColor(entry.shap_value)}
+                      fill="#3b82f6"
                     />
                   </BarChart>
                 </ResponsiveContainer>
@@ -119,20 +137,49 @@ const ExplainableAI: React.FC = () => {
                 <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
                 Waterfall Chart
               </h3>
-              <div className="h-64">
+              <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={shapWaterfallData}>
+                  <LineChart 
+                    data={shapWaterfallData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="feature" stroke="#6b7280" angle={-45} textAnchor="end" height={80} />
-                    <YAxis stroke="#6b7280" />
+                    <XAxis 
+                      dataKey="feature" 
+                      stroke="#374151"
+                      angle={-35} 
+                      textAnchor="end" 
+                      height={60}
+                      tick={{ fontSize: 12 }}
+                      interval={0}
+                      tickFormatter={(value: string) => value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                    />
+                    <YAxis 
+                      stroke="#374151"
+                      tick={{ fontSize: 12 }}
+                      label={{ 
+                        value: "Cumulative Impact", 
+                        angle: -90, 
+                        position: "insideLeft",
+                        style: { textAnchor: 'middle', fill: '#374151', fontSize: '12px' }
+                      }}
+                    />
                     <Tooltip 
                       contentStyle={{
                         backgroundColor: '#f9fafb',
                         border: '1px solid #e5e7eb',
-                        borderRadius: '8px'
+                        borderRadius: '8px',
+                        fontSize: '12px'
                       }}
                     />
-                    <Line type="monotone" dataKey="cumulative" stroke="#3b82f6" strokeWidth={3} />
+                    <Line 
+                      type="monotone" 
+                      dataKey="cumulative" 
+                      stroke="#3b82f6" 
+                      strokeWidth={2}
+                      dot={{ fill: '#3b82f6', r: 4 }}
+                      activeDot={{ r: 6 }}
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -145,20 +192,52 @@ const ExplainableAI: React.FC = () => {
                 <Brain className="w-5 h-5 mr-2 text-purple-500" />
                 Global Feature Importance
               </h3>
-              <div className="h-64">
+              <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={globalFeatureImportance}>
+                  <BarChart 
+                    data={globalFeatureImportance}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="feature" stroke="#6b7280" angle={-45} textAnchor="end" height={80} />
-                    <YAxis stroke="#6b7280" />
+                    <XAxis 
+                      dataKey="feature" 
+                      stroke="#374151"
+                      angle={-35} 
+                      textAnchor="end" 
+                      height={60}
+                      tick={{ fontSize: 12 }}
+                      interval={0}
+                      label={{ 
+                        value: "Feature", 
+                        position: "bottom", 
+                        offset: 40,
+                        style: { textAnchor: 'middle', fill: '#374151', fontSize: '12px' }
+                      }}
+                    />
+                    <YAxis 
+                      stroke="#374151"
+                      tick={{ fontSize: 12 }}
+                      label={{ 
+                        value: "Importance Score", 
+                        angle: -90, 
+                        position: "insideLeft",
+                        offset: -10,
+                        style: { textAnchor: 'middle', fill: '#374151', fontSize: '12px' }
+                      }}
+                    />
                     <Tooltip 
                       contentStyle={{
                         backgroundColor: '#f9fafb',
                         border: '1px solid #e5e7eb',
-                        borderRadius: '8px'
+                        borderRadius: '8px',
+                        fontSize: '12px'
                       }}
                     />
-                    <Bar dataKey="importance" fill="#8b5cf6" />
+                    <Bar 
+                      dataKey="importance" 
+                      fill="#8b5cf6"
+                      radius={[4, 4, 0, 0]}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -253,224 +332,6 @@ const ExplainableAI: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Explainable AI Implementation</h3>
-        <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-          <pre className="text-green-400 text-sm">
-{`# explainable_ai.py
-import shap
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-import joblib
-
-class ExplainableAI:
-    def __init__(self, model, X_train, feature_names):
-        self.model = model
-        self.X_train = X_train
-        self.feature_names = feature_names
-        self.explainer = None
-        self.shap_values = None
-        
-    def initialize_explainer(self, explainer_type='tree'):
-        """Initialize SHAP explainer based on model type"""
-        if explainer_type == 'tree':
-            # For tree-based models (RandomForest, XGBoost)
-            self.explainer = shap.TreeExplainer(self.model)
-        elif explainer_type == 'linear':
-            # For linear models (LogisticRegression, SVM)
-            self.explainer = shap.LinearExplainer(self.model, self.X_train)
-        elif explainer_type == 'kernel':
-            # For any model (slower but universal)
-            self.explainer = shap.KernelExplainer(self.model.predict_proba, self.X_train[:100])
-        else:
-            # Deep learning models
-            self.explainer = shap.DeepExplainer(self.model, self.X_train)
-    
-    def compute_shap_values(self, X_test):
-        """Compute SHAP values for test set"""
-        if self.explainer is None:
-            raise ValueError("Explainer not initialized. Call initialize_explainer() first.")
-        
-        self.shap_values = self.explainer.shap_values(X_test)
-        return self.shap_values
-    
-    def plot_summary(self, plot_type='dot'):
-        """Create SHAP summary plot"""
-        if self.shap_values is None:
-            raise ValueError("SHAP values not computed. Call compute_shap_values() first.")
-        
-        plt.figure(figsize=(10, 8))
-        shap.summary_plot(
-            self.shap_values, 
-            self.X_train, 
-            feature_names=self.feature_names,
-            plot_type=plot_type
-        )
-        plt.title('SHAP Summary Plot - Feature Impact on Mental Health Risk')
-        plt.tight_layout()
-        plt.show()
-    
-    def plot_waterfall(self, instance_index=0):
-        """Create waterfall plot for individual prediction"""
-        if self.shap_values is None:
-            raise ValueError("SHAP values not computed.")
-        
-        plt.figure(figsize=(10, 6))
-        shap.waterfall_plot(
-            shap.Explanation(
-                values=self.shap_values[instance_index],
-                base_values=self.explainer.expected_value,
-                data=self.X_train[instance_index],
-                feature_names=self.feature_names
-            )
-        )
-        plt.title(f'SHAP Waterfall Plot - Instance {instance_index}')
-        plt.tight_layout()
-        plt.show()
-    
-    def plot_force(self, instance_index=0):
-        """Create force plot for individual prediction"""
-        if self.shap_values is None:
-            raise ValueError("SHAP values not computed.")
-        
-        return shap.force_plot(
-            self.explainer.expected_value,
-            self.shap_values[instance_index],
-            self.X_train[instance_index],
-            feature_names=self.feature_names
-        )
-    
-    def feature_importance_analysis(self):
-        """Analyze global feature importance"""
-        if self.shap_values is None:
-            raise ValueError("SHAP values not computed.")
-        
-        # Calculate mean absolute SHAP values for each feature
-        feature_importance = np.abs(self.shap_values).mean(axis=0)
-        
-        # Create DataFrame for easy analysis
-        importance_df = pd.DataFrame({
-            'feature': self.feature_names,
-            'importance': feature_importance
-        }).sort_values('importance', ascending=False)
-        
-        return importance_df
-    
-    def interaction_analysis(self, feature1_idx, feature2_idx):
-        """Analyze feature interactions using SHAP interaction values"""
-        if hasattr(self.explainer, 'shap_interaction_values'):
-            interaction_values = self.explainer.shap_interaction_values(self.X_train)
-            
-            # Extract interaction between two specific features
-            interaction_strength = np.abs(interaction_values[:, feature1_idx, feature2_idx]).mean()
-            
-            return {
-                'feature1': self.feature_names[feature1_idx],
-                'feature2': self.feature_names[feature2_idx],
-                'interaction_strength': interaction_strength,
-                'interaction_values': interaction_values[:, feature1_idx, feature2_idx]
-            }
-        else:
-            print("Model doesn't support interaction analysis")
-            return None
-    
-    def decision_path_analysis(self, instance_index=0):
-        """Analyze decision path for tree-based models"""
-        if hasattr(self.model, 'decision_path'):
-            # Get decision path
-            decision_path = self.model.decision_path([self.X_train[instance_index]])
-            leaf_id = self.model.apply([self.X_train[instance_index]])
-            
-            feature_indices = decision_path.indices[decision_path.indptr[0]:decision_path.indptr[1]]
-            threshold_values = self.model.tree_.threshold[feature_indices]
-            feature_names_path = [self.feature_names[i] for i in self.model.tree_.feature[feature_indices]]
-            
-            path_info = []
-            for i, (feature_idx, threshold) in enumerate(zip(feature_indices, threshold_values)):
-                if threshold != -2:  # -2 indicates leaf node
-                    feature_value = self.X_train[instance_index][self.model.tree_.feature[feature_idx]]
-                    condition = f"{self.feature_names[self.model.tree_.feature[feature_idx]]} <= {threshold:.3f}"
-                    path_info.append({
-                        'step': i + 1,
-                        'feature': self.feature_names[self.model.tree_.feature[feature_idx]],
-                        'condition': condition,
-                        'feature_value': feature_value,
-                        'threshold': threshold
-                    })
-            
-            return path_info
-        else:
-            print("Decision path analysis only available for tree-based models")
-            return None
-    
-    def generate_explanation_report(self, instance_index=0):
-        """Generate comprehensive explanation report"""
-        if self.shap_values is None:
-            self.compute_shap_values(self.X_train)
-        
-        # Get SHAP values for the instance
-        instance_shap = self.shap_values[instance_index]
-        instance_features = self.X_train[instance_index]
-        
-        # Sort features by absolute SHAP value
-        feature_impact = list(zip(self.feature_names, instance_shap, instance_features))
-        feature_impact.sort(key=lambda x: abs(x[1]), reverse=True)
-        
-        report = {
-            'instance_index': instance_index,
-            'prediction': self.model.predict([instance_features])[0],
-            'prediction_probability': self.model.predict_proba([instance_features])[0].max(),
-            'base_value': self.explainer.expected_value,
-            'feature_contributions': [
-                {
-                    'feature': name,
-                    'shap_value': float(shap_val),
-                    'feature_value': float(feat_val),
-                    'impact': 'increases_risk' if shap_val > 0 else 'decreases_risk'
-                }
-                for name, shap_val, feat_val in feature_impact
-            ],
-            'top_risk_factors': [
-                name for name, shap_val, _ in feature_impact[:3] if shap_val > 0
-            ],
-            'top_protective_factors': [
-                name for name, shap_val, _ in feature_impact[:3] if shap_val < 0
-            ]
-        }
-        
-        return report
-    
-    def model_fairness_analysis(self, sensitive_features):
-        """Analyze model fairness across different groups"""
-        fairness_metrics = {}
-        
-        for feature in sensitive_features:
-            if feature in self.feature_names:
-                feature_idx = self.feature_names.index(feature)
-                
-                # Split data by feature values (assuming binary for simplicity)
-                feature_values = self.X_train[:, feature_idx]
-                unique_values = np.unique(feature_values)
-                
-                group_metrics = {}
-                for value in unique_values:
-                    mask = feature_values == value
-                    group_shap = self.shap_values[mask]
-                    
-                    group_metrics[f'group_{value}'] = {
-                        'mean_shap_impact': np.abs(group_shap).mean(),
-                        'prediction_variance': np.var(self.model.predict_proba(self.X_train[mask])[:, 1])
-                    }
-                
-                fairness_metrics[feature] = group_metrics
-        
-        return fairness_metrics`}
-          </pre>
         </div>
       </div>
     </div>

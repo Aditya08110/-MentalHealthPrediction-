@@ -8,6 +8,9 @@ import ModelTraining from './components/ModelTraining';
 import ModelEvaluation from './components/ModelEvaluation';
 import RiskAssessment from './components/RiskAssessment';
 import ExplainableAI from './components/ExplainableAI';
+import MoodBoostingGames from './components/MoodBoostingGames';
+import EmotionalAvatar from './components/EmotionalAvatar';
+import RelaxAndHeal from './components/RelaxAndHeal';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -112,6 +115,39 @@ function App() {
             <ProtectedRoute>
               <Dashboard>
                 <ExplainableAI />
+              </Dashboard>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/games"
+          element={
+            <ProtectedRoute>
+              <Dashboard>
+                <MoodBoostingGames />
+              </Dashboard>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/avatar"
+          element={
+            <ProtectedRoute>
+              <Dashboard>
+                <EmotionalAvatar />
+              </Dashboard>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard/relax"
+          element={
+            <ProtectedRoute>
+              <Dashboard>
+                <RelaxAndHeal />
               </Dashboard>
             </ProtectedRoute>
           }

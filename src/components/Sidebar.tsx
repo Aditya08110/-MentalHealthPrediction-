@@ -8,7 +8,10 @@ import {
   Activity,
   TrendingUp,
   AlertTriangle,
-  LogOut
+  LogOut,
+  Heart,
+  Music,
+  Bot
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -24,6 +27,9 @@ const Sidebar: React.FC = () => {
     { id: 'evaluation', icon: TrendingUp, label: 'Model Evaluation' },
     { id: 'prediction', icon: AlertTriangle, label: 'Risk Assessment' },
     { id: 'explainable', icon: Shield, label: 'Explainable AI' },
+    { id: 'games', icon: Heart, label: 'Mood Boosting Games' },
+    { id: 'avatar', icon: Bot, label: 'AI Emotional Avatar' },
+    { id: 'relax', icon: Music, label: 'Relax & Heal' },
   ];
 
   const handleLogout = () => {
