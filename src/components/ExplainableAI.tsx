@@ -67,21 +67,19 @@ const ExplainableAI: React.FC = () => {
           <div className="flex space-x-2">
             <button
               onClick={() => setExplanationType('local')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                explanationType === 'local'
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${explanationType === 'local'
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+                }`}
             >
               Local Explanation
             </button>
             <button
               onClick={() => setExplanationType('global')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                explanationType === 'global'
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${explanationType === 'global'
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+                }`}
             >
               Global Explanation
             </button>
@@ -99,22 +97,22 @@ const ExplainableAI: React.FC = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={shapValues} layout="horizontal" margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis 
-                      type="number" 
-                      stroke="#374151" 
+                    <XAxis
+                      type="number"
+                      stroke="#374151"
                       tickSize={8}
                       label={{ value: "SHAP Value", position: "bottom", offset: 0 }}
                       style={{ fontSize: '12px' }}
                     />
-                    <YAxis 
-                      dataKey="feature" 
-                      type="category" 
-                      width={120} 
+                    <YAxis
+                      dataKey="feature"
+                      type="category"
+                      width={120}
                       stroke="#374151"
                       tickFormatter={(value: string) => value.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                       style={{ fontSize: '12px' }}
                     />
-                    <Tooltip 
+                    <Tooltip
                       contentStyle={{
                         backgroundColor: '#f9fafb',
                         border: '1px solid #e5e7eb',
@@ -123,8 +121,8 @@ const ExplainableAI: React.FC = () => {
                       }}
                       formatter={(value: any) => [value.toFixed(3), 'SHAP Value']}
                     />
-                    <Bar 
-                      dataKey="shap_value" 
+                    <Bar
+                      dataKey="shap_value"
                       fill="#3b82f6"
                     />
                   </BarChart>
@@ -139,32 +137,32 @@ const ExplainableAI: React.FC = () => {
               </h3>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart 
+                  <LineChart
                     data={shapWaterfallData}
                     margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis 
-                      dataKey="feature" 
+                    <XAxis
+                      dataKey="feature"
                       stroke="#374151"
-                      angle={-35} 
-                      textAnchor="end" 
+                      angle={-35}
+                      textAnchor="end"
                       height={60}
                       tick={{ fontSize: 12 }}
                       interval={0}
                       tickFormatter={(value: string) => value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
                     />
-                    <YAxis 
+                    <YAxis
                       stroke="#374151"
                       tick={{ fontSize: 12 }}
-                      label={{ 
-                        value: "Cumulative Impact", 
-                        angle: -90, 
+                      label={{
+                        value: "Cumulative Impact",
+                        angle: -90,
                         position: "insideLeft",
                         style: { textAnchor: 'middle', fill: '#374151', fontSize: '12px' }
                       }}
                     />
-                    <Tooltip 
+                    <Tooltip
                       contentStyle={{
                         backgroundColor: '#f9fafb',
                         border: '1px solid #e5e7eb',
@@ -172,10 +170,10 @@ const ExplainableAI: React.FC = () => {
                         fontSize: '12px'
                       }}
                     />
-                    <Line 
-                      type="monotone" 
-                      dataKey="cumulative" 
-                      stroke="#3b82f6" 
+                    <Line
+                      type="monotone"
+                      dataKey="cumulative"
+                      stroke="#3b82f6"
                       strokeWidth={2}
                       dot={{ fill: '#3b82f6', r: 4 }}
                       activeDot={{ r: 6 }}
@@ -194,38 +192,38 @@ const ExplainableAI: React.FC = () => {
               </h3>
               <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart 
+                  <BarChart
                     data={globalFeatureImportance}
                     margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis 
-                      dataKey="feature" 
+                    <XAxis
+                      dataKey="feature"
                       stroke="#374151"
-                      angle={-35} 
-                      textAnchor="end" 
+                      angle={-35}
+                      textAnchor="end"
                       height={60}
                       tick={{ fontSize: 12 }}
                       interval={0}
-                      label={{ 
-                        value: "Feature", 
-                        position: "bottom", 
+                      label={{
+                        value: "Feature",
+                        position: "bottom",
                         offset: 40,
                         style: { textAnchor: 'middle', fill: '#374151', fontSize: '12px' }
                       }}
                     />
-                    <YAxis 
+                    <YAxis
                       stroke="#374151"
                       tick={{ fontSize: 12 }}
-                      label={{ 
-                        value: "Importance Score", 
-                        angle: -90, 
+                      label={{
+                        value: "Importance Score",
+                        angle: -90,
                         position: "insideLeft",
                         offset: -10,
                         style: { textAnchor: 'middle', fill: '#374151', fontSize: '12px' }
                       }}
                     />
-                    <Tooltip 
+                    <Tooltip
                       contentStyle={{
                         backgroundColor: '#f9fafb',
                         border: '1px solid #e5e7eb',
@@ -233,8 +231,8 @@ const ExplainableAI: React.FC = () => {
                         fontSize: '12px'
                       }}
                     />
-                    <Bar 
-                      dataKey="importance" 
+                    <Bar
+                      dataKey="importance"
                       fill="#8b5cf6"
                       radius={[4, 4, 0, 0]}
                     />
@@ -252,16 +250,15 @@ const ExplainableAI: React.FC = () => {
                 {featureInteractions.map((interaction, index) => (
                   <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg border">
                     <div className="flex items-center">
-                      <div className={`w-3 h-3 rounded-full mr-3 ${
-                        interaction.effect === 'positive' ? 'bg-green-400' : 'bg-red-400'
-                      }`}></div>
+                      <div className={`w-3 h-3 rounded-full mr-3 ${interaction.effect === 'positive' ? 'bg-green-400' : 'bg-red-400'
+                        }`}></div>
                       <span className="text-sm font-medium text-gray-900">
                         {interaction.feature1} × {interaction.feature2}
                       </span>
                     </div>
                     <div className="flex items-center">
                       <div className="w-20 bg-gray-200 rounded-full h-2 mr-2">
-                        <div 
+                        <div
                           className="bg-blue-500 h-2 rounded-full"
                           style={{ width: `${interaction.interaction_strength * 100}%` }}
                         ></div>
@@ -293,9 +290,8 @@ const ExplainableAI: React.FC = () => {
                     <p className="text-sm font-medium text-gray-900">{step.condition}</p>
                     <p className="text-xs text-gray-600">Risk probability: {(step.probability * 100).toFixed(0)}%</p>
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    step.decision === 'High Risk' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
-                  }`}>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${step.decision === 'High Risk' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'
+                    }`}>
                     {step.decision}
                   </span>
                 </div>
@@ -312,21 +308,21 @@ const ExplainableAI: React.FC = () => {
               <div>
                 <h4 className="font-semibold text-gray-900 mb-1">SHAP Values</h4>
                 <p className="text-gray-700">
-                  Positive values (red) increase risk prediction, negative values (green) decrease risk. 
+                  Positive values (red) increase risk prediction, negative values (green) decrease risk.
                   Larger absolute values indicate stronger influence.
                 </p>
               </div>
               <div>
                 <h4 className="font-semibold text-gray-900 mb-1">Feature Importance</h4>
                 <p className="text-gray-700">
-                  Shows average contribution of each feature across all predictions. 
+                  Shows average contribution of each feature across all predictions.
                   Higher values indicate more influential features.
                 </p>
               </div>
               <div>
                 <h4 className="font-semibold text-gray-900 mb-1">Interactions</h4>
                 <p className="text-gray-700">
-                  Measures how features work together. Positive interactions amplify effects, 
+                  Measures how features work together. Positive interactions amplify effects,
                   negative interactions can counteract each other.
                 </p>
               </div>

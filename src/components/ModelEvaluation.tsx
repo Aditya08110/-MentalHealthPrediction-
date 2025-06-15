@@ -79,11 +79,10 @@ const ModelEvaluation: React.FC = () => {
               <button
                 key={metric.name}
                 onClick={() => setSelectedMetric(metric.name.toLowerCase().replace('-', '_') as any)}
-                className={`p-4 rounded-lg border transition-all ${
-                  selectedMetric === metric.name.toLowerCase().replace('-', '_')
+                className={`p-4 rounded-lg border transition-all ${selectedMetric === metric.name.toLowerCase().replace('-', '_')
                     ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-blue-500 hover:bg-blue-50'
-                }`}
+                  }`}
               >
                 <div className="flex items-center space-x-3">
                   <div className={`p-2 rounded-lg ${metric.bgColor}`}>
@@ -112,12 +111,12 @@ const ModelEvaluation: React.FC = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={timeBasedMetrics} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis 
-                    dataKey="month" 
+                  <XAxis
+                    dataKey="month"
                     stroke="#374151"
                     style={{ fontSize: '12px' }}
                   />
-                  <YAxis 
+                  <YAxis
                     stroke="#374151"
                     domain={[0.5, 1]}
                     tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}

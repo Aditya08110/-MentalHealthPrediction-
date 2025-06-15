@@ -1,5 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { DataProvider } from './context/DataContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import Sidebar from './components/Sidebar';
 import DataCollection from './components/DataCollection';
 import ExploratoryAnalysis from './components/ExploratoryAnalysis';
@@ -11,15 +13,19 @@ import ExplainableAI from './components/ExplainableAI';
 import MoodBoostingGames from './components/MoodBoostingGames';
 import EmotionalAvatar from './components/EmotionalAvatar';
 import RelaxAndHeal from './components/RelaxAndHeal';
+import MultimodalPredictionEngine from './components/MultimodalPredictionEngine';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const Dashboard = ({ children }: { children: React.ReactNode }) => {
+  console.log('Dashboard rendering with children:', children);
   return (
     <div className="min-h-screen bg-gray-100 flex">
       <Sidebar />
-      <main className="flex-1 p-6 overflow-auto">
-        {children}
+      <main className="flex-1 overflow-auto">
+        <ErrorBoundary>
+          {children}
+        </ErrorBoundary>
       </main>
     </div>
   );
@@ -27,133 +33,68 @@ const Dashboard = ({ children }: { children: React.ReactNode }) => {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Navigate to="/dashboard/data" replace />} />
-
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <Navigate to="/dashboard/data" replace />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/data"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <DataCollection />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/eda"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <ExploratoryAnalysis />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/features"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <FeatureEngineering />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/model"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <ModelTraining />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/evaluation"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <ModelEvaluation />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/prediction"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <RiskAssessment />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/explainable"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <ExplainableAI />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/games"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <MoodBoostingGames />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/avatar"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <EmotionalAvatar />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/dashboard/relax"
-          element={
-            <ProtectedRoute>
-              <Dashboard>
-                <RelaxAndHeal />
-              </Dashboard>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <DataProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Navigate to="/dashboard/data" replace />} />
+            <Route path="/dashboard" element={<Dashboard><Outlet /></Dashboard>}>
+              <Route path="data" element={
+                <ProtectedRoute>
+                  <DataCollection />
+                </ProtectedRoute>
+              } />
+              <Route path="analysis" element={
+                <ProtectedRoute>
+                  <ExploratoryAnalysis />
+                </ProtectedRoute>
+              } />
+              <Route path="features" element={
+                <ProtectedRoute>
+                  <FeatureEngineering />
+                </ProtectedRoute>
+              } />
+              <Route path="model" element={
+                <ProtectedRoute>
+                  <ModelTraining />
+                </ProtectedRoute>
+              } />
+              <Route path="evaluation" element={
+                <ProtectedRoute>
+                  <ModelEvaluation />
+                </ProtectedRoute>
+              } />
+              <Route path="prediction" element={
+                <ProtectedRoute>
+                  <RiskAssessment />
+                </ProtectedRoute>
+              } />
+              <Route path="explainable" element={
+                <ProtectedRoute>
+                  <ExplainableAI />
+                </ProtectedRoute>
+              } />
+              <Route path="games" element={
+                <ProtectedRoute>
+                  <MoodBoostingGames />
+                </ProtectedRoute>
+              } />
+              <Route path="avatar" element={
+                <ProtectedRoute>
+                  <EmotionalAvatar />
+                </ProtectedRoute>
+              } />
+              <Route path="relax" element={
+                <ProtectedRoute>
+                  <RelaxAndHeal />
+                </ProtectedRoute>
+              } />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </DataProvider>
+    </ErrorBoundary>
   );
 }
 

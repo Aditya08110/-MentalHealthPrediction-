@@ -88,11 +88,10 @@ const FeatureEngineering: React.FC = () => {
               <button
                 key={feature.id}
                 onClick={() => setSelectedFeature(feature.id)}
-                className={`p-4 rounded-lg border transition-all ${
-                  selectedFeature === feature.id
+                className={`p-4 rounded-lg border transition-all ${selectedFeature === feature.id
                     ? 'border-blue-500 bg-blue-50'
                     : 'border-gray-200 hover:border-blue-500 hover:bg-blue-50'
-                }`}
+                  }`}
               >
                 <div className="flex items-center space-x-3">
                   <div className={`p-2 rounded-lg ${feature.bgColor}`}>
@@ -117,21 +116,21 @@ const FeatureEngineering: React.FC = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={featureTimeline} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis 
-                    dataKey="day" 
+                  <XAxis
+                    dataKey="day"
                     stroke="#374151"
-                    label={{ 
-                      value: "Day", 
-                      position: "bottom", 
+                    label={{
+                      value: "Day",
+                      position: "bottom",
                       offset: -10,
                       style: { textAnchor: 'middle', fill: '#374151', fontSize: '12px' }
                     }}
                   />
-                  <YAxis 
+                  <YAxis
                     stroke="#374151"
-                    label={{ 
-                      value: "Feature Value", 
-                      angle: -90, 
+                    label={{
+                      value: "Feature Value",
+                      angle: -90,
                       position: "insideLeft",
                       style: { textAnchor: 'middle', fill: '#374151', fontSize: '12px' }
                     }}

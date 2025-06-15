@@ -17,19 +17,18 @@ import {
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const currentPath = location.pathname.split('/').pop() || 'data';
 
   const menuItems = [
-    { id: 'data', icon: Database, label: 'Data Collection' },
-    { id: 'eda', icon: BarChart3, label: 'Data Analysis' },
-    { id: 'features', icon: Activity, label: 'Feature Engineering' },
-    { id: 'model', icon: Brain, label: 'Model Training' },
-    { id: 'evaluation', icon: TrendingUp, label: 'Model Evaluation' },
-    { id: 'prediction', icon: AlertTriangle, label: 'Risk Assessment' },
-    { id: 'explainable', icon: Shield, label: 'Explainable AI' },
-    { id: 'games', icon: Heart, label: 'Mood Boosting Games' },
-    { id: 'avatar', icon: Bot, label: 'AI Emotional Avatar' },
-    { id: 'relax', icon: Music, label: 'Relax & Heal' },
+    { id: 'data', path: '/dashboard/data', icon: Database, label: 'Data Collection' },
+    { id: 'analysis', path: '/dashboard/analysis', icon: BarChart3, label: 'Data Analysis' },
+    { id: 'features', path: '/dashboard/features', icon: Activity, label: 'Feature Engineering' },
+    { id: 'model', path: '/dashboard/model', icon: Brain, label: 'Model Training' },
+    { id: 'evaluation', path: '/dashboard/evaluation', icon: TrendingUp, label: 'Model Evaluation' },
+    { id: 'prediction', path: '/dashboard/prediction', icon: AlertTriangle, label: 'Risk Assessment' },
+    { id: 'explainable', path: '/dashboard/explainable', icon: Shield, label: 'Explainable AI' },
+    { id: 'games', path: '/dashboard/games', icon: Heart, label: 'Mood Boosting Games' },
+    { id: 'avatar', path: '/dashboard/avatar', icon: Bot, label: 'Emotional Avatar' },
+    { id: 'relax', path: '/dashboard/relax', icon: Music, label: 'Relax & Heal' }
   ];
 
   const handleLogout = () => {
@@ -38,29 +37,30 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="w-64 bg-gray-900 text-white flex flex-col">
-      <div className="p-6 border-b border-gray-700">
-        <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
-          MindWatch AI
-        </h1>
-        <p className="text-sm text-gray-400 mt-1">Mental Health Prediction</p>
+    <div className="w-64 bg-white h-screen border-r border-gray-200 flex flex-col">
+      <div className="p-4 border-b border-gray-200">
+        <h1 className="text-xl font-bold text-blue-600">MindWatch AI</h1>
+        <p className="text-sm text-gray-600">Mental Health Analytics</p>
       </div>
 
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 overflow-y-auto p-4">
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+
             return (
               <li key={item.id}>
                 <button
-                  onClick={() => navigate(`/dashboard/${item.id}`)}
-                  className={`w-full flex items-center px-4 py-3 rounded-lg transition-all duration-200 ${currentPath === item.id
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                    }`}
+                  onClick={() => navigate(item.path)}
+                  className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-colors ${
+                    isActive
+                      ? 'bg-blue-50 text-blue-600'
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
                 >
-                  <Icon className="w-5 h-5 mr-3" />
-                  <span className="text-sm font-medium">{item.label}</span>
+                  <Icon className="w-5 h-5" />
+                  <span className="font-medium">{item.label}</span>
                 </button>
               </li>
             );
@@ -68,21 +68,13 @@ const Sidebar: React.FC = () => {
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-gray-700">
-        <div className="bg-gray-800 rounded-lg p-3">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-400">System Status</span>
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          </div>
-          <p className="text-xs text-gray-300">Model Active • Realtime Monitoring</p>
-        </div>
-
+      <div className="p-4 border-t border-gray-200">
         <button
           onClick={handleLogout}
-          className="w-full mt-4 flex items-center px-4 py-3 rounded-lg text-red-400 hover:bg-red-400/10 transition-all duration-200"
+          className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
         >
-          <LogOut className="w-5 h-5 mr-3" />
-          <span className="text-sm font-medium">Logout</span>
+          <LogOut className="w-5 h-5" />
+          <span className="font-medium">Logout</span>
         </button>
       </div>
     </div>
