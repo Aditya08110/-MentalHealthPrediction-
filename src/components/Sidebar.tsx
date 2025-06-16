@@ -22,10 +22,10 @@ const Sidebar: React.FC = () => {
     { id: 'data', path: '/dashboard/data', icon: Database, label: 'Data Collection' },
     { id: 'analysis', path: '/dashboard/analysis', icon: BarChart3, label: 'Data Analysis' },
     { id: 'features', path: '/dashboard/features', icon: Activity, label: 'Feature Engineering' },
-    { id: 'model', path: '/dashboard/model', icon: Brain, label: 'Model Training' },
+    { id: 'training', path: '/dashboard/training', icon: Brain, label: 'Model Training' },
     { id: 'evaluation', path: '/dashboard/evaluation', icon: TrendingUp, label: 'Model Evaluation' },
-    { id: 'prediction', path: '/dashboard/prediction', icon: AlertTriangle, label: 'Risk Assessment' },
-    { id: 'explainable', path: '/dashboard/explainable', icon: Shield, label: 'Explainable AI' },
+    { id: 'risk', path: '/dashboard/risk', icon: AlertTriangle, label: 'Risk Assessment' },
+    { id: 'explain', path: '/dashboard/explain', icon: Shield, label: 'Explainable AI' },
     { id: 'games', path: '/dashboard/games', icon: Heart, label: 'Mood Boosting Games' },
     { id: 'avatar', path: '/dashboard/avatar', icon: Bot, label: 'Emotional Avatar' },
     { id: 'relax', path: '/dashboard/relax', icon: Music, label: 'Relax & Heal' }

@@ -1,7 +1,8 @@
+export * from './mentalHealth';
+export * from './multimodal';
+
 export interface SensorData {
   timestamp: string;
-  gps_latitude: number;
-  gps_longitude: number;
   screen_time_minutes: number;
   calls_count: number;
   sms_count: number;
@@ -10,7 +11,9 @@ export interface SensorData {
   heart_rate: number;
   app_usage_social: number;
   app_usage_productivity: number;
-  battery_level: number;
+  app_usage_entertainment: number;
+  location_changes: number;
+  mood_score: number;
 }
 
 export interface ProcessedFeatures {

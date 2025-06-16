@@ -1,59 +1,140 @@
 import React, { useState, useEffect } from 'react';
-import { Smartphone, MapPin, Clock, Battery, Download } from 'lucide-react';
+import { Smartphone, MapPin, Clock, Battery, Download, AlertTriangle } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label } from 'recharts';
-import { SensorData } from '../types';
+import { SensorData, DATA_RANGES, SensorDataValidation } from '../types';
 import { useData } from '../context/DataContext';
 
 const DataCollection: React.FC = () => {
-  console.log('DataCollection component rendering');
   const [isCollecting, setIsCollecting] = useState(false);
   const [realtimeData, setRealtimeData] = useState<Partial<SensorData>>({});
+  const [dataQuality, setDataQuality] = useState<number>(1);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const { sensorData, addSensorData, clearData } = useData();
 
-  useEffect(() => {
-    console.log('DataCollection mount effect running');
-    // Only load mock data if there's no existing data
-    if (sensorData.length === 0) {
-      console.log('No existing data, generating mock data');
-      const mockData = {
-        timestamp: new Date().toISOString(),
-        screen_time_minutes: Math.floor(Math.random() * 600),
-        steps: Math.floor(Math.random() * 12000),
-        heart_rate: Math.floor(70 + Math.random() * 20),
-        battery_level: Math.floor(Math.random() * 100),
-        gps_latitude: 40.7128 + (Math.random() - 0.5) * 0.1,
-        gps_longitude: -74.0060 + (Math.random() - 0.5) * 0.1,
-        calls_count: Math.floor(Math.random() * 10),
-        sms_count: Math.floor(Math.random() * 20),
-        app_usage_social: Math.floor(60 + Math.random() * 120),
-        app_usage_productivity: Math.floor(30 + Math.random() * 60),
-        sleep_hours: 6 + Math.random() * 3,
-      };
-      addSensorData(mockData as SensorData);
+  // Generate realistic, correlated sensor data
+  const generateRealisticData = (previousData?: SensorData): SensorData => {
+    const now = new Date();
+    const hour = now.getHours();
+
+    // Base patterns
+    const isNightTime = hour >= 22 || hour <= 6;
+    const isWorkingHours = hour >= 9 && hour <= 17;
+    const isEveningTime = hour >= 18 && hour <= 21;
+
+    // Activity level based on time of day
+    const activityMultiplier = isNightTime ? 0.2 : 
+                              isWorkingHours ? 0.8 : 
+                              isEveningTime ? 0.6 : 0.4;
+
+    // Generate correlated metrics
+    let steps = Math.floor(
+      DATA_RANGES.STEPS.LOW_RISK * activityMultiplier * (0.8 + Math.random() * 0.4)
+    );
+
+    // Heart rate correlates with activity
+    const baseHeartRate = 60;
+    const activityImpact = (steps / DATA_RANGES.STEPS.LOW_RISK) * 20;
+    let heartRate = Math.floor(
+      baseHeartRate + activityImpact + (Math.random() - 0.5) * 10
+    );
+
+    // Sleep hours - more realistic pattern
+    let sleepHours = isNightTime ? 
+      7 + Math.random() * 2 : // Night time sleep
+      (Math.random() < 0.1 ? 0.5 + Math.random() : 0); // Occasional naps
+
+    // Screen time correlates negatively with activity
+    let screenTime = Math.floor(
+      DATA_RANGES.SCREEN_TIME.LOW_RISK * (2 - activityMultiplier) * (0.8 + Math.random() * 0.4)
+    );
+
+    // Social interactions correlate with time of day
+    let socialActivity = Math.floor(
+      DATA_RANGES.SOCIAL_INTERACTION.LOW_RISK * activityMultiplier * (0.8 + Math.random() * 0.4)
+    );
+
+    // Add some trend continuation from previous data
+    if (previousData) {
+      steps = Math.floor((steps + previousData.steps) / 2);
+      heartRate = Math.floor((heartRate + previousData.heart_rate) / 2);
+      screenTime = Math.floor((screenTime + previousData.screen_time_minutes) / 2);
+      socialActivity = Math.floor((socialActivity + previousData.app_usage_social) / 2);
     }
-  }, [sensorData.length, addSensorData]);
+
+    // Ensure values are within valid ranges
+    steps = Math.max(DATA_RANGES.STEPS.MIN, Math.min(DATA_RANGES.STEPS.MAX, steps));
+    heartRate = Math.max(DATA_RANGES.HEART_RATE.MIN, Math.min(DATA_RANGES.HEART_RATE.MAX, heartRate));
+    sleepHours = Math.max(DATA_RANGES.SLEEP_HOURS.MIN, Math.min(DATA_RANGES.SLEEP_HOURS.MAX, sleepHours));
+    screenTime = Math.max(DATA_RANGES.SCREEN_TIME.MIN, Math.min(DATA_RANGES.SCREEN_TIME.MAX, screenTime));
+    socialActivity = Math.max(DATA_RANGES.SOCIAL_INTERACTION.MIN, Math.min(DATA_RANGES.SOCIAL_INTERACTION.MAX, socialActivity));
+
+    const newData: SensorData = {
+      timestamp: now.toISOString(),
+      steps,
+      heart_rate: heartRate,
+      sleep_hours: sleepHours,
+      screen_time_minutes: screenTime,
+      battery_level: Math.floor(20 + Math.random() * 80),
+      gps_latitude: 40.7128 + (Math.random() - 0.5) * 0.01,
+      gps_longitude: -74.0060 + (Math.random() - 0.5) * 0.01,
+      calls_count: Math.floor(socialActivity * 0.2),
+      sms_count: Math.floor(socialActivity * 0.3),
+      app_usage_social: socialActivity,
+      app_usage_productivity: Math.floor(screenTime * (isWorkingHours ? 0.6 : 0.2))
+    };
+
+    // Validate data quality
+    const validation = validateSensorData(newData);
+    setValidationErrors(validation.errors);
+    const quality = calculateDataQuality(newData, validation);
+    setDataQuality(quality);
+
+    return newData;
+  };
+
+  const validateSensorData = (data: SensorData): SensorDataValidation => {
+    const errors: string[] = [];
+    
+    if (data.steps < DATA_RANGES.STEPS.MIN || data.steps > DATA_RANGES.STEPS.MAX)
+      errors.push(`Invalid steps count: ${data.steps}`);
+    
+    if (data.heart_rate < DATA_RANGES.HEART_RATE.MIN || data.heart_rate > DATA_RANGES.HEART_RATE.MAX)
+      errors.push(`Invalid heart rate: ${data.heart_rate}`);
+    
+    if (data.sleep_hours < DATA_RANGES.SLEEP_HOURS.MIN || data.sleep_hours > DATA_RANGES.SLEEP_HOURS.MAX)
+      errors.push(`Invalid sleep hours: ${data.sleep_hours}`);
+    
+    if (data.screen_time_minutes < DATA_RANGES.SCREEN_TIME.MIN || data.screen_time_minutes > DATA_RANGES.SCREEN_TIME.MAX)
+      errors.push(`Invalid screen time: ${data.screen_time_minutes}`);
+
+    return { isValid: errors.length === 0, errors };
+  };
+
+  const calculateDataQuality = (data: SensorData, validation: SensorDataValidation): number => {
+    if (!validation.isValid) return 0;
+
+    // Check for realistic correlations
+    const correlationScore = (
+      (data.steps > 5000 && data.heart_rate > 70 ? 0.2 : 0) + // Activity correlation
+      (data.screen_time_minutes < 300 && data.steps > 8000 ? 0.2 : 0) + // Screen time vs activity
+      (data.sleep_hours >= 6 && data.sleep_hours <= 9 ? 0.2 : 0) + // Normal sleep range
+      (data.app_usage_social > 30 && data.calls_count + data.sms_count > 5 ? 0.2 : 0) + // Social correlation
+      0.2 // Base quality
+    );
+
+    return correlationScore;
+  };
 
   useEffect(() => {
     if (isCollecting) {
-      console.log('Starting data collection');
+      console.log('Starting data collection with realistic patterns');
       const interval = setInterval(() => {
-        const newData = {
-          timestamp: new Date().toISOString(),
-          screen_time_minutes: Math.floor(Math.random() * 600),
-          steps: Math.floor(Math.random() * 12000),
-          heart_rate: Math.floor(70 + Math.random() * 20),
-          battery_level: Math.floor(Math.random() * 100),
-          gps_latitude: 40.7128 + (Math.random() - 0.5) * 0.1,
-          gps_longitude: -74.0060 + (Math.random() - 0.5) * 0.1,
-          calls_count: Math.floor(Math.random() * 10),
-          sms_count: Math.floor(Math.random() * 20),
-          app_usage_social: Math.floor(60 + Math.random() * 120),
-          app_usage_productivity: Math.floor(30 + Math.random() * 60),
-          sleep_hours: 6 + Math.random() * 3,
-        };
-        console.log('Generated new data:', newData);
+        const newData = generateRealisticData(sensorData[sensorData.length - 1]);
+        console.log('Generated realistic data:', newData);
         setRealtimeData(newData);
-        addSensorData(newData as SensorData);
+        if (newData) {
+          addSensorData(newData);
+        }
       }, 2000);
 
       return () => {
@@ -61,7 +142,7 @@ const DataCollection: React.FC = () => {
         clearInterval(interval);
       };
     }
-  }, [isCollecting, addSensorData]);
+  }, [isCollecting, addSensorData, sensorData]);
 
   const handleExportData = () => {
     const dataStr = JSON.stringify(sensorData, null, 2);
@@ -132,6 +213,35 @@ const DataCollection: React.FC = () => {
           >
             {isCollecting ? 'Stop Collection' : 'Start Collection'}
           </button>
+        </div>
+
+        {/* Data Quality Indicator */}
+        <div className="mb-4 p-4 rounded-lg bg-gray-50">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-medium text-gray-900">Data Quality</h3>
+              <div className="mt-1 flex items-center">
+                <div className="w-48 bg-gray-200 rounded-full h-2">
+                  <div
+                    className={`h-2 rounded-full ${
+                      dataQuality > 0.8 ? 'bg-green-500' :
+                      dataQuality > 0.6 ? 'bg-yellow-500' : 'bg-red-500'
+                    }`}
+                    style={{ width: `${dataQuality * 100}%` }}
+                  />
+                </div>
+                <span className="ml-2 text-sm text-gray-600">
+                  {(dataQuality * 100).toFixed(0)}%
+                </span>
+              </div>
+            </div>
+            {validationErrors.length > 0 && (
+              <div className="text-red-500 text-sm">
+                <AlertTriangle className="inline-block mr-1 h-4 w-4" />
+                {validationErrors.length} validation issues
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Metrics Grid */}

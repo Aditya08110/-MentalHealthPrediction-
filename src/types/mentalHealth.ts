@@ -149,3 +149,70 @@ export const mentalHealthLevels: Record<MentalHealthLevel, MentalHealthCondition
         ]
     }
 };
+
+// Data validation ranges
+export const DATA_RANGES = {
+  STEPS: {
+    MIN: 0,
+    MAX: 25000,
+    LOW_RISK: 7500,
+    HIGH_RISK: 3000
+  },
+  HEART_RATE: {
+    MIN: 40,
+    MAX: 180,
+    LOW_RISK: 60,
+    HIGH_RISK: 100
+  },
+  SLEEP_HOURS: {
+    MIN: 0,
+    MAX: 24,
+    LOW_RISK: 7,
+    HIGH_RISK: 6
+  },
+  SCREEN_TIME: {
+    MIN: 0,
+    MAX: 1440, // 24 hours in minutes
+    LOW_RISK: 240, // 4 hours
+    HIGH_RISK: 480 // 8 hours
+  },
+  SOCIAL_INTERACTION: {
+    MIN: 0,
+    MAX: 1000,
+    LOW_RISK: 60,
+    HIGH_RISK: 20
+  }
+} as const;
+
+// Feature importance weights for risk calculation
+export const FEATURE_WEIGHTS = {
+  steps: 0.25,
+  sleep_hours: 0.25,
+  heart_rate: 0.15,
+  screen_time: 0.15,
+  social_interaction: 0.20
+} as const;
+
+export interface SensorDataValidation {
+  isValid: boolean;
+  errors: string[];
+}
+
+export interface SensorMetadata {
+  timestamp: string;
+  userId: string;
+  deviceType: string;
+  dataQuality: number; // 0-1 score
+  validationResult: SensorDataValidation;
+}
+
+export interface ProcessedFeatures {
+  mobility_variance: number;
+  social_interaction_score: number;
+  sleep_regularity: number;
+  activity_level: number;
+  digital_wellbeing_score: number;
+  circadian_rhythm_score: number;
+  feature_importance: Record<string, number>;
+  confidence_score: number;
+}

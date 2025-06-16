@@ -38,58 +38,28 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Navigate to="/dashboard/data" replace />} />
-            <Route path="/dashboard" element={<Dashboard><Outlet /></Dashboard>}>
-              <Route path="data" element={
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route
+              path="/dashboard"
+              element={
                 <ProtectedRoute>
-                  <DataCollection />
+                  <Dashboard>
+                    <Outlet />
+                  </Dashboard>
                 </ProtectedRoute>
-              } />
-              <Route path="analysis" element={
-                <ProtectedRoute>
-                  <ExploratoryAnalysis />
-                </ProtectedRoute>
-              } />
-              <Route path="features" element={
-                <ProtectedRoute>
-                  <FeatureEngineering />
-                </ProtectedRoute>
-              } />
-              <Route path="model" element={
-                <ProtectedRoute>
-                  <ModelTraining />
-                </ProtectedRoute>
-              } />
-              <Route path="evaluation" element={
-                <ProtectedRoute>
-                  <ModelEvaluation />
-                </ProtectedRoute>
-              } />
-              <Route path="prediction" element={
-                <ProtectedRoute>
-                  <RiskAssessment />
-                </ProtectedRoute>
-              } />
-              <Route path="explainable" element={
-                <ProtectedRoute>
-                  <ExplainableAI />
-                </ProtectedRoute>
-              } />
-              <Route path="games" element={
-                <ProtectedRoute>
-                  <MoodBoostingGames />
-                </ProtectedRoute>
-              } />
-              <Route path="avatar" element={
-                <ProtectedRoute>
-                  <EmotionalAvatar />
-                </ProtectedRoute>
-              } />
-              <Route path="relax" element={
-                <ProtectedRoute>
-                  <RelaxAndHeal />
-                </ProtectedRoute>
-              } />
+              }
+            >
+              <Route path="data" element={<DataCollection />} />
+              <Route path="analysis" element={<ExploratoryAnalysis />} />
+              <Route path="features" element={<FeatureEngineering />} />
+              <Route path="training" element={<ModelTraining />} />
+              <Route path="evaluation" element={<ModelEvaluation />} />
+              <Route path="risk" element={<RiskAssessment />} />
+              <Route path="explain" element={<ExplainableAI />} />
+              <Route path="games" element={<MoodBoostingGames />} />
+              <Route path="avatar" element={<EmotionalAvatar />} />
+              <Route path="relax" element={<RelaxAndHeal />} />
+              <Route path="multimodal" element={<MultimodalPredictionEngine />} />
             </Route>
           </Routes>
         </BrowserRouter>
