@@ -16,6 +16,7 @@ import RelaxAndHeal from './components/RelaxAndHeal';
 import MultimodalPredictionEngine from './components/MultimodalPredictionEngine';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
+import MentalHealthAssessment from './components/MentalHealthAssessment';
 
 const Dashboard = ({ children }: { children: React.ReactNode }) => {
   console.log('Dashboard rendering with children:', children);
@@ -60,6 +61,7 @@ function App() {
               <Route path="avatar" element={<EmotionalAvatar />} />
               <Route path="relax" element={<RelaxAndHeal />} />
               <Route path="multimodal" element={<MultimodalPredictionEngine />} />
+              <Route path="assessment" element={<MentalHealthAssessment />} />
             </Route>
           </Routes>
         </BrowserRouter>

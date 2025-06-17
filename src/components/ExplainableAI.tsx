@@ -40,30 +40,30 @@ const ExplainableAI: React.FC = () => {
     // Generate SHAP values based on actual sensor data
     const latestData = sensorData[sensorData.length - 1];
     console.log('Latest sensor data:', latestData);
-    
+
     const mockShapValues = [
-      { 
-        feature: 'social_interaction', 
+      {
+        feature: 'social_interaction',
         shap_value: calculateShapValue(latestData.calls_count + latestData.sms_count, 10),
         feature_value: (latestData.calls_count + latestData.sms_count) / 10
       },
-      { 
-        feature: 'sleep_regularity', 
+      {
+        feature: 'sleep_regularity',
         shap_value: calculateShapValue(latestData.sleep_hours, 8),
         feature_value: latestData.sleep_hours / 8
       },
-      { 
-        feature: 'activity_level', 
+      {
+        feature: 'activity_level',
         shap_value: calculateShapValue(latestData.steps, 10000),
         feature_value: latestData.steps / 10000
       },
-      { 
-        feature: 'digital_wellbeing', 
+      {
+        feature: 'digital_wellbeing',
         shap_value: -calculateShapValue(latestData.screen_time_minutes, 480),
         feature_value: latestData.screen_time_minutes / 480
       },
-      { 
-        feature: 'circadian_rhythm', 
+      {
+        feature: 'circadian_rhythm',
         shap_value: calculateShapValue(latestData.sleep_hours, 8) * 0.8,
         feature_value: latestData.sleep_hours / 8
       },
@@ -124,21 +124,19 @@ const ExplainableAI: React.FC = () => {
           <div className="flex space-x-2">
             <button
               onClick={() => setExplanationType('local')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                explanationType === 'local'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${explanationType === 'local'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               Local Explanation
             </button>
             <button
               onClick={() => setExplanationType('global')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                explanationType === 'global'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${explanationType === 'global'
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               Global Explanation
             </button>
@@ -156,7 +154,14 @@ const ExplainableAI: React.FC = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={shapValues} layout="horizontal" margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="feature" angle={-45} textAnchor="end" interval={0} height={60} />
+                    <XAxis
+                      dataKey="feature"
+                      angle={-30}
+                      textAnchor="end"
+                      interval={0}
+                      height={70}
+                      tick={{ fontSize: 16, fill: '#1e293b', fontWeight: 600 }}
+                    />
                     <YAxis label={{ value: 'SHAP Value', angle: -90, position: 'insideLeft' }} />
                     <Tooltip />
                     <Bar
@@ -177,7 +182,14 @@ const ExplainableAI: React.FC = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={shapValues} layout="horizontal" margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="feature" angle={-45} textAnchor="end" interval={0} height={60} />
+                    <XAxis
+                      dataKey="feature"
+                      angle={-30}
+                      textAnchor="end"
+                      interval={0}
+                      height={70}
+                      tick={{ fontSize: 16, fill: '#1e293b', fontWeight: 600 }}
+                    />
                     <YAxis label={{ value: 'Feature Value', angle: -90, position: 'insideLeft' }} />
                     <Tooltip />
                     <Bar dataKey="feature_value" fill="#3b82f6" />
@@ -197,7 +209,14 @@ const ExplainableAI: React.FC = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={globalFeatureImportance} layout="horizontal" margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="feature" angle={-45} textAnchor="end" interval={0} height={60} />
+                    <XAxis
+                      dataKey="feature"
+                      angle={-30}
+                      textAnchor="end"
+                      interval={0}
+                      height={70}
+                      tick={{ fontSize: 16, fill: '#1e293b', fontWeight: 600 }}
+                    />
                     <YAxis label={{ value: 'Importance', angle: -90, position: 'insideLeft' }} />
                     <Tooltip />
                     <Bar dataKey="importance" fill="#3b82f6" />
@@ -215,12 +234,19 @@ const ExplainableAI: React.FC = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={featureInteractions} layout="horizontal" margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="feature1" angle={-45} textAnchor="end" interval={0} height={60} />
+                    <XAxis
+                      dataKey="feature1"
+                      angle={-30}
+                      textAnchor="end"
+                      interval={0}
+                      height={70}
+                      tick={{ fontSize: 16, fill: '#1e293b', fontWeight: 600 }}
+                    />
                     <YAxis label={{ value: 'Interaction Strength', angle: -90, position: 'insideLeft' }} />
                     <Tooltip />
-                    <Bar 
-                      dataKey="interaction_strength" 
-                      fill={(entry: any) => entry.effect === 'positive' ? '#10b981' : '#ef4444'}
+                    <Bar
+                      dataKey="interaction_strength"
+                      fill="#10b981"
                     />
                   </BarChart>
                 </ResponsiveContainer>
