@@ -15,7 +15,8 @@ import {
   LogOut,
   ClipboardCheck,
   FileText,
-  HeartHandshake
+  HeartHandshake,
+  BookOpen
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -41,7 +42,9 @@ const Sidebar: React.FC = () => {
     { id: 'avatar', label: 'Emotional Avatar', path: '/dashboard/avatar', icon: User },
     { id: 'relax', label: 'Relax & Heal', path: '/dashboard/relax', icon: Music },
     { id: 'multimodal', label: 'Multimodal Prediction', path: '/dashboard/multimodal', icon: Camera },
-    { id: 'assessment', label: 'Mental Health Assessment', path: '/dashboard/assessment', icon: ClipboardCheck }
+    { id: 'assessment', label: 'Mental Health Assessment', path: '/dashboard/assessment', icon: ClipboardCheck },
+    { id: 'feedback', label: 'Feedback & Journal', path: '/dashboard/feedback', icon: BookOpen },
+    { id: 'research', label: 'Research & Reports', path: '/dashboard/research', icon: FileText },
   ];
 
   return (

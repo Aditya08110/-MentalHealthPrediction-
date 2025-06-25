@@ -19,6 +19,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import MentalHealthAssessment from './components/MentalHealthAssessment';
 import ManualDataEntry from './components/ManualDataEntry';
 import SelfCareSupport from './components/SelfCareSupport';
+import FeedbackJournal from './components/FeedbackJournal';
+import ResearchReport from './components/ResearchReport';
 
 const Dashboard = ({ children }: { children: React.ReactNode }) => {
   console.log('Dashboard rendering with children:', children);
@@ -65,6 +67,8 @@ function App() {
               <Route path="relax" element={<RelaxAndHeal />} />
               <Route path="multimodal" element={<MultimodalPredictionEngine />} />
               <Route path="assessment" element={<MentalHealthAssessment />} />
+              <Route path="feedback" element={<FeedbackJournal />} />
+              <Route path="research" element={<ResearchReport />} />
               <Route path="selfcare" element={<SelfCareSupport />} />
             </Route>
           </Routes>
