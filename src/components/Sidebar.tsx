@@ -13,7 +13,9 @@ import {
   Music,
   Camera,
   LogOut,
-  ClipboardCheck
+  ClipboardCheck,
+  FileText,
+  HeartHandshake
 } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
@@ -26,6 +28,8 @@ const Sidebar: React.FC = () => {
   };
 
   const menuItems = [
+    { id: 'manual', label: 'Manual Data Entry', path: '/dashboard/manual', icon: FileText },
+    { id: 'selfcare', label: 'Self-Care & Support', path: '/dashboard/selfcare', icon: HeartHandshake },
     { id: 'data', label: 'Data Collection', path: '/dashboard/data', icon: Database },
     { id: 'analysis', label: 'Exploratory Analysis', path: '/dashboard/analysis', icon: BarChart2 },
     { id: 'features', label: 'Feature Engineering', path: '/dashboard/features', icon: Cpu },

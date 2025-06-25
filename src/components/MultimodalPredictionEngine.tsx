@@ -30,18 +30,12 @@ import {
     getAvailableDataSources,
     generateMultimodalPrediction
 } from '../utils/predictionEngine';
-import ManualDataEntry, { ManualData } from './ManualDataEntry';
-import ScreenshotUpload from './ScreenshotUpload';
 
 const MultimodalPredictionEngine: React.FC = () => {
     const [dataSources, setDataSources] = useState<DataSources | null>(null);
     const [prediction, setPrediction] = useState<MultimodalPrediction | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [manualData, setManualData] = useState<ManualData | null>(null);
-    const [useManual, setUseManual] = useState(true);
-    const [uploadedData, setUploadedData] = useState<{ instagramScreenTime: number } | null>(null);
-    const [trendHistory, setTrendHistory] = useState<{ appUsages: { appName: string; timeSpent: number }[]; date: string }[]>([]);
 
     // Initialize available data sources
     useEffect(() => {
@@ -72,51 +66,17 @@ const MultimodalPredictionEngine: React.FC = () => {
                 voice?: VoiceData;
             } = {};
 
-            if (uploadedData) {
-                data.smartphone = {
-                    screenTime: uploadedData.instagramScreenTime,
-                    appUsage: [
-                        {
-                            appName: 'Instagram',
-                            timeSpent: uploadedData.instagramScreenTime,
-                            category: 'social',
-                        },
-                    ],
-                    lastActive: new Date().toISOString(),
-                };
-            } else if (manualData) {
-                data.smartphone = {
-                    screenTime: manualData.instagramScreenTime,
-                    appUsage: [
-                        {
-                            appName: 'Instagram',
-                            timeSpent: manualData.instagramScreenTime,
-                            category: 'social',
-                        },
-                    ],
-                    lastActive: new Date().toISOString(),
-                };
-                data.health = {
-                    timestamp: new Date().toISOString(),
-                    steps: manualData.steps,
-                    sleepDuration: manualData.sleepHours,
-                    sleepQuality: 80, // Placeholder
-                    heartRate: 70, // Placeholder
-                    physicalActivity: 30, // Placeholder
-                };
-            } else {
-                if (dataSources.hasSmartphoneAccess) {
-                    data.smartphone = await collectSmartphoneData();
-                }
-                if (dataSources.hasLocationAccess) {
-                    data.location = await collectLocationData();
-                }
-                if (dataSources.hasHealthAccess) {
-                    data.health = await collectHealthData();
-                }
-                if (dataSources.hasSpotifyAccess) {
-                    data.music = await collectMusicData();
-                }
+            if (dataSources.hasSmartphoneAccess) {
+                data.smartphone = await collectSmartphoneData();
+            }
+            if (dataSources.hasLocationAccess) {
+                data.location = await collectLocationData();
+            }
+            if (dataSources.hasHealthAccess) {
+                data.health = await collectHealthData();
+            }
+            if (dataSources.hasSpotifyAccess) {
+                data.music = await collectMusicData();
             }
 
             const result = await generateMultimodalPrediction(
@@ -165,57 +125,8 @@ const MultimodalPredictionEngine: React.FC = () => {
         );
     };
 
-    const handleExtractedData = (data: { appUsages: { appName: string; timeSpent: number }[] }) => {
-        setUploadedData(data);
-        setTrendHistory(prev => [...prev, { ...data, date: new Date().toISOString() }]);
-    };
-
     return (
         <div className="space-y-6">
-            <div className="flex gap-4 justify-center mt-4">
-                <button
-                    className={`btn ${useManual ? 'btn-primary' : 'btn-outline'}`}
-                    onClick={() => setUseManual(true)}
-                >
-                    Enter Manually
-                </button>
-                <button
-                    className={`btn ${!useManual ? 'btn-primary' : 'btn-outline'}`}
-                    onClick={() => setUseManual(false)}
-                >
-                    Upload Screenshot
-                </button>
-            </div>
-            {useManual ? (
-                <ManualDataEntry onSubmit={setManualData} />
-            ) : (
-                <ScreenshotUpload onExtract={handleExtractedData} />
-            )}
-            {/* Trend Detection & Insights */}
-            {trendHistory.length > 1 && (
-                <div className="bg-blue-50 rounded-lg p-4 mt-4">
-                    <div className="font-semibold mb-2">Usage Trends:</div>
-                    <ul>
-                        {trendHistory.slice(-5).map((entry, idx) => (
-                            <li key={idx}>
-                                <span className="text-gray-700">{new Date(entry.date).toLocaleDateString()}: </span>
-                                {entry.appUsages.map(app => `${app.appName}: ${app.timeSpent} min`).join(', ')}
-                            </li>
-                        ))}
-                    </ul>
-                    {/* Simple trend detection example */}
-                    {(() => {
-                        const app = 'Instagram';
-                        const times = trendHistory.map(e => e.appUsages.find(a => a.appName === app)?.timeSpent || 0);
-                        if (times.length > 1) {
-                            const diff = times[times.length - 1] - times[times.length - 2];
-                            if (diff > 0) return <div className="text-red-600 mt-2">Your Instagram usage increased by {diff} min since last entry.</div>;
-                            if (diff < 0) return <div className="text-green-600 mt-2">Your Instagram usage decreased by {Math.abs(diff)} min since last entry.</div>;
-                        }
-                        return null;
-                    })()}
-                </div>
-            )}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div>
