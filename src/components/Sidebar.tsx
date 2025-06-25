@@ -65,8 +65,8 @@ const Sidebar: React.FC = () => {
                 <button
                   onClick={() => navigate(item.path)}
                   className={`w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-colors ${isActive
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-blue-50 text-blue-600'
+                    : 'text-gray-600 hover:bg-gray-50'
                     }`}
                 >
                   <Icon className="w-5 h-5" />

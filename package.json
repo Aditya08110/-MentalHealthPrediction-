@@ -14,12 +14,13 @@
     "@phosphor-icons/react": "^2.1.10",
     "@types/react-router-dom": "^5.3.3",
     "framer-motion": "^12.18.1",
+    "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.6.2",
-    "recharts": "^2.15.3",
+    "recharts": "^2.15.4",
     "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
