@@ -1,6 +1,6 @@
 # Mental Health Prediction System
 
-An advanced mental health assessment and prediction platform built with React, TypeScript, and Vite. This system combines multimodal data analysis, personalized risk assessment, and AI-driven recommendations to support mental health care.
+An advanced mental health assessment and prediction platform built with React, TypeScript, and Vite. This system combines multimodal data analysis, personalized risk assessment, and AI-driven recommendations to support mental health care. Username: Aditya.k Password : Aditya2004$
 
 ![Mental Health Prediction System](/public/0dbb2e88-b1da-4e14-86c6-237f0603b9d7.png)
 
