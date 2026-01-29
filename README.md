@@ -104,6 +104,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Open-source community
 - Contributors and supporters
 
-## Documentation
 
-For more detailed documentation, please refer to the [Mental Health Project Report](/public/MentalHealthProjectReport.pdf).
